@@ -1,6 +1,6 @@
 import chai from 'chai';
-import * as OpenCC from 'opencc-js/core';
-import * as loc from 'opencc-js/preset';
+import * as OpenCC from '../../dist/esm-lib/core.js';
+import * as loc from '../../dist/esm-lib/preset/full.js';
 
 const Converter = OpenCC.ConverterBuilder(loc);
 

@@ -1,5 +1,5 @@
 {
-  "name": "opencc-js",
+  "name": "@willh/opencc-js",
   "version": "1.0.5",
   "description": "The JavaScript version of Open Chinese Convert (OpenCC)",
   "main": "./dist/umd/full.js",
@@ -15,14 +15,14 @@
     "./*": "./dist/esm-lib/*.js"
   },
   "scripts": {
-    "build": "node build.js && rollup -c",
-    "test": "node test/node/basic.mjs && node test/node/basic.cjs"
+    "build": "bun run build.js && bun x rollup -c",
+    "test": "bun run test/node/basic.mjs && bun run test/node/basic.cjs"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nk2028/opencc-js.git"
+    "url": "git+https://github.com/doggy8088/opencc-js.git"
   },
-  "author": "The nk2028 Project",
+  "author": "Will Huang",
   "keywords": [
     "opencc",
     "Chinese",
@@ -37,9 +37,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nk2028/opencc-js/issues"
+    "url": "https://github.com/doggy8088/opencc-js/issues"
   },
-  "homepage": "https://github.com/nk2028/opencc-js#readme",
+  "homepage": "https://github.com/doggy8088/opencc-js#readme",
   "devDependencies": {
     "chai": "~4.3.4",
     "opencc-data": "~1.0.7",
