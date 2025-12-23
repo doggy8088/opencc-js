@@ -1,5 +1,5 @@
 const chai = require('chai');
-const OpenCC = require('opencc-js');
+const OpenCC = require('../../dist/umd/full.js');
 
 chai.should();
 
