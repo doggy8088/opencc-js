@@ -9,3 +9,5 @@ dist
 
 /bundle-browser.js
 /bundle-node.js
+
+coverage/*
