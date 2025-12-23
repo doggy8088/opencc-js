@@ -2,11 +2,11 @@
 
 ## Test Commands
 
-| Command | Purpose |
-|---------|---------|
-| `bun run test` | Run all tests once + generate coverage |
-| `bun run test:watch` | Watch mode for TDD (auto-rerun on changes) |
-| `open coverage/index.html` | View visual coverage report |
+| Command                    | Purpose                                    |
+| -------------------------- | ------------------------------------------ |
+| `bun run test`             | Run all tests once + generate coverage     |
+| `bun run test:watch`       | Watch mode for TDD (auto-rerun on changes) |
+| `open coverage/index.html` | View visual coverage report                |
 
 ## Test Statistics
 
@@ -25,6 +25,7 @@ Coverage Reports:   Text + HTML + JSON + LCOV
 ## Files Added/Modified
 
 ### ✅ New Files
+
 - `test/unit.test.js` - Comprehensive test suite (24 tests)
 - `vitest.config.js` - Vitest configuration
 - `.github/workflows/ci.yml` - GitHub Actions workflow
@@ -33,6 +34,7 @@ Coverage Reports:   Text + HTML + JSON + LCOV
 - `IMPLEMENTATION_SUMMARY.md` - This implementation summary
 
 ### 🔄 Modified Files
+
 - `package.json` - Updated scripts & dependencies
   - Removed: `chai` dependency
   - Added: `vitest`, `@vitest/coverage-v8`, `@vitest/ui`
@@ -41,6 +43,7 @@ Coverage Reports:   Text + HTML + JSON + LCOV
 ## Test Coverage
 
 ### Trie Class (5 tests)
+
 - ✓ ASCII conversion
 - ✓ CJK with variant selectors
 - ✓ Empty trie
@@ -48,6 +51,7 @@ Coverage Reports:   Text + HTML + JSON + LCOV
 - ✓ Unmapped character preservation
 
 ### Preset Conversions (10 tests)
+
 - ✓ HK→CN, T→CN, CN→TW
 - ✓ Single/multi character
 - ✓ Numbers & punctuation
@@ -55,6 +59,7 @@ Coverage Reports:   Text + HTML + JSON + LCOV
 - ✓ Already converted text
 
 ### CustomConverter (5 tests)
+
 - ✓ Custom mappings
 - ✓ Overlapping definitions
 - ✓ Multiple occurrences
@@ -62,6 +67,7 @@ Coverage Reports:   Text + HTML + JSON + LCOV
 - ✓ Mixed content
 
 ### Edge Cases (4 tests)
+
 - ✓ Consecutive characters
 - ✓ Very long text (1000+)
 - ✓ Special Unicode
@@ -69,15 +75,18 @@ Coverage Reports:   Text + HTML + JSON + LCOV
 
 ## CI/CD Workflow
 
-**Triggers:**
+**Triggers**:
+
 - Push to `main` or `develop`
 - Pull requests to `main` or `develop`
 
-**Runs on:**
+**Runs on**:
+
 - Ubuntu latest
 - Node.js 18.x & 20.x
 
-**Steps:**
+**Steps**:
+
 1. Checkout code
 2. Setup Bun
 3. Install dependencies
@@ -88,12 +97,12 @@ Coverage Reports:   Text + HTML + JSON + LCOV
 
 ## Coverage Report Locations
 
-| Format | Location | View |
-|--------|----------|------|
-| HTML | `coverage/index.html` | Browser |
-| JSON | `coverage/coverage-final.json` | Programmatic |
-| LCOV | `coverage/lcov.info` | CI tools |
-| Text | Console output | Terminal |
+| Format | Location                       | View         |
+| ------ | ------------------------------ | ------------ |
+| HTML   | `coverage/index.html`          | Browser      |
+| JSON   | `coverage/coverage-final.json` | Programmatic |
+| LCOV   | `coverage/lcov.info`           | CI tools     |
+| Text   | Console output                 | Terminal     |
 
 ## Key Features
 
@@ -109,17 +118,20 @@ Coverage Reports:   Text + HTML + JSON + LCOV
 ## Troubleshooting
 
 **Tests not running?**
+
 ```bash
 bun install && bun run build && bun run test
 ```
 
 **Need to clear cache?**
+
 ```bash
 rm -rf coverage node_modules
 bun install
 ```
 
 **View detailed coverage?**
+
 ```bash
 open coverage/index.html  # macOS
 start coverage/index.html # Windows
