@@ -16,7 +16,8 @@
   },
   "scripts": {
     "build": "bun run build.js && bun x rollup -c",
-    "test": "bun run test/node/basic.mjs && bun run test/node/basic.cjs"
+    "test": "vitest run --reporter=verbose --coverage",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
@@ -41,8 +42,10 @@
   },
   "homepage": "https://github.com/doggy8088/opencc-js#readme",
   "devDependencies": {
-    "chai": "~4.3.4",
+    "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/ui": "^1.0.4",
     "opencc-data": "~1.0.7",
-    "rollup-plugin-generate-package-json": "^3.2.0"
+    "rollup-plugin-generate-package-json": "^3.2.0",
+    "vitest": "^1.0.4"
   }
 }
