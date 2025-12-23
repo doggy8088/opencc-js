@@ -5,3 +5,13 @@
 /main.js
 /full.js
 /test
+/coverage
+/vitest.config.js
+/VITEST_SETUP.md
+/COMPLETION_CHECKLIST.md
+/IMPLEMENTATION_SUMMARY.md
+/QUICK_REFERENCE.md
+/TESTING.md
+/bun.lock
+/package-lock.json
+/src
