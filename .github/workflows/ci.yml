@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x, 22.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -45,38 +45,38 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            
+
             // Read coverage-final.json (Vitest v1 format)
             const coverageFile = './coverage/coverage-final.json';
             if (!fs.existsSync(coverageFile)) {
               console.log('Coverage file not found');
               return;
             }
-            
+
             const coverage = fs.readFileSync(coverageFile, 'utf8');
             const data = JSON.parse(coverage);
-            
+
             // Extract totals from coverage-final.json format
             const totals = data['.'] ? data['.'].totals : data.totals;
             if (!totals) {
               console.log('No coverage totals found');
               return;
             }
-            
+
             const comment = `## Test Results ✓
-            
+
             All tests passed! Here's the coverage summary:
-            
+
             | Metric | Coverage |
             |--------|----------|
             | Lines | ${(totals.lines.pct || 0).toFixed(1)}% |
             | Statements | ${(totals.statements.pct || 0).toFixed(1)}% |
             | Functions | ${(totals.functions.pct || 0).toFixed(1)}% |
             | Branches | ${(totals.branches.pct || 0).toFixed(1)}% |
-            
+
             📊 [Full Coverage Report](https://codecov.io) | 🧪 24 tests passed
             `;
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
