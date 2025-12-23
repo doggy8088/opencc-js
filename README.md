@@ -76,11 +76,11 @@ bun add @willh/opencc-js
 <script type="module">
   // 完整版
   import * as OpenCC from 'https://cdn.jsdelivr.net/npm/@willh/opencc-js@1.0.5/dist/esm/full.js';
-  
+
   // 或使用精簡版
   // import * as OpenCC from 'https://cdn.jsdelivr.net/npm/@willh/opencc-js@1.0.5/dist/esm/cn2t.js';
   // import * as OpenCC from 'https://cdn.jsdelivr.net/npm/@willh/opencc-js@1.0.5/dist/esm/t2cn.js';
-  
+
   const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
   console.log(converter('汉语')); // 輸出：漢語
 </script>
@@ -161,18 +161,20 @@ console.log(converter('漢語')); // 輸出：汉语
 
 `@willh/opencc-js` 支援以下地區碼（locale codes）：
 
-| 地區碼 | 說明 | 範例 |
-|--------|------|------|
-| `cn` | 簡體中文（中國大陸） | 汉语、计算机 |
-| `tw` | 繁體中文（臺灣） | 漢語、電腦 |
-| `twp` | 繁體中文（臺灣）+ 慣用詞轉換 | 漢語、腳踏車（自行車 → 腳踏車）|
-| `hk` | 繁體中文（香港） | 漢語、電腦 |
-| `jp` | 日本新字體 | 漢語、国語 |
-| `t` | 繁體中文（OpenCC 標準）| 漢語、電腦 |
+| 地區碼 | 說明                                                       | 範例                            |
+| ------ | ---------------------------------------------------------- | ------------------------------- |
+| `cn`   | 簡體中文（中國大陸）                                       | 汉语、计算机                    |
+| `tw`   | 繁體中文（臺灣）                                           | 漢語、電腦                      |
+| `tw2`  | 繁體中文（臺灣）+ 常見詞彙（TWVariants + TWPhrasesCustom） | 漢語、影片（视频 → 影片）       |
+| `twp`  | 繁體中文（臺灣）+ 慣用詞轉換                               | 漢語、腳踏車（自行車 → 腳踏車） |
+| `hk`   | 繁體中文（香港）                                           | 漢語、電腦                      |
+| `jp`   | 日本新字體                                                 | 漢語、国語                      |
+| `t`    | 繁體中文（OpenCC 標準）                                    | 漢語、電腦                      |
 
 **注意事項**：
 - `from` 和 `to` 參數可以使用上述任何地區碼
 - `t` 是 OpenCC 的內部標準格式，除非您清楚了解其用途，否則不建議使用
+- `tw2` 僅包含 TWVariants 與內建的常見詞彙字典 `TWPhrasesCustom`，適合技術文件、開發相關用語
 - `twp` 包含臺灣慣用詞彙的轉換，例如「自行車」會轉換為「腳踏車」
 
 ### 常用轉換範例
@@ -187,6 +189,10 @@ console.log(cn2tw('软件开发')); // 輸出：軟體開發
 // 簡體（大陸）→ 繁體（臺灣，含慣用詞）
 const cn2twp = OpenCC.Converter({ from: 'cn', to: 'twp' });
 console.log(cn2twp('信息技术')); // 輸出：資訊技術
+
+// 簡體（大陸）→ 繁體（臺灣，自訂常見詞彙）
+const cn2tw2 = OpenCC.Converter({ from: 'cn', to: 'tw2' });
+console.log(cn2tw2('视频接口')); // 輸出：影片介面
 
 // 繁體（臺灣）→ 簡體（大陸）
 const tw2cn = OpenCC.Converter({ from: 'tw', to: 'cn' });
@@ -217,7 +223,7 @@ const converter = OpenCC.CustomConverter([
   ['橘子', 'orange'],
 ]);
 
-console.log(converter('我喜歡吃香蕉和蘋果')); 
+console.log(converter('我喜歡吃香蕉和蘋果'));
 // 輸出：我喜歡吃banana和apple
 ```
 
@@ -228,7 +234,7 @@ console.log(converter('我喜歡吃香蕉和蘋果'));
 ```javascript
 const converter = OpenCC.CustomConverter('香蕉 banana|蘋果 apple|梨 pear|橘子 orange');
 
-console.log(converter('香蕉 蘋果 梨 橘子')); 
+console.log(converter('香蕉 蘋果 梨 橘子'));
 // 輸出：banana apple pear orange
 ```
 
@@ -291,18 +297,18 @@ console.log(converter('悟空道：“师父又来了。怎么叫做‘水中捞
 <body>
   <h1 lang="zh-HK">漢語</h1>
   <p lang="zh-HK">這是一段繁體中文（香港）的文字。</p>
-  
+
   <button onclick="convertPage()">轉換為簡體</button>
   <button onclick="restorePage()">還原為繁體</button>
-  
+
   <script src="https://cdn.jsdelivr.net/npm/@willh/opencc-js@1.0.5/dist/umd/full.js"></script>
   <script>
     // 建立轉換器：繁體（香港）→ 簡體（大陸）
     const converter = OpenCC.Converter({ from: 'hk', to: 'cn' });
-    
+
     // 設定轉換起點為根節點（整個頁面）
     const rootNode = document.documentElement;
-    
+
     // 建立 HTML 轉換處理器
     const htmlConverter = OpenCC.HTMLConverter(
       converter,
@@ -310,12 +316,12 @@ console.log(converter('悟空道：“师父又来了。怎么叫做‘水中捞
       'zh-HK',  // 原始語言屬性
       'zh-CN'   // 轉換後的語言屬性
     );
-    
+
     function convertPage() {
       htmlConverter.convert(); // 開始轉換
       // 結果：<h1 lang="zh-CN">汉语</h1>
     }
-    
+
     function restorePage() {
       htmlConverter.restore(); // 還原為原始內容
       // 結果：<h1 lang="zh-HK">漢語</h1>
@@ -352,7 +358,7 @@ OpenCC.HTMLConverter(converter, rootNode, langAttrInitial, langAttrNew)
 <script>
   const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
   const contentNode = document.getElementById('content');
-  
+
   // 只轉換 content 區域中的繁體中文
   const htmlConverter = OpenCC.HTMLConverter(converter, contentNode, 'zh-TW', 'zh-CN');
   htmlConverter.convert();
@@ -400,12 +406,12 @@ console.log(converter('漢語')); // 輸出：汉语
 
 根據您的使用情境，選擇最適合的版本可以有效減少載入時間：
 
-| 使用情境 | 建議版本 | 檔案路徑 |
-|---------|---------|---------|
-| 只需要簡體轉繁體 | cn2t.js | `dist/esm/cn2t.js` 或 `dist/umd/cn2t.js` |
-| 只需要繁體轉簡體 | t2cn.js | `dist/esm/t2cn.js` 或 `dist/umd/t2cn.js` |
-| 需要多種轉換 | full.js | `dist/esm/full.js` 或 `dist/umd/full.js` |
-| 使用打包工具 | Tree Shaking | `@willh/opencc-js/core` + `@willh/opencc-js/preset` |
+| 使用情境         | 建議版本     | 檔案路徑                                            |
+| ---------------- | ------------ | --------------------------------------------------- |
+| 只需要簡體轉繁體 | cn2t.js      | `dist/esm/cn2t.js` 或 `dist/umd/cn2t.js`            |
+| 只需要繁體轉簡體 | t2cn.js      | `dist/esm/t2cn.js` 或 `dist/umd/t2cn.js`            |
+| 需要多種轉換     | full.js      | `dist/esm/full.js` 或 `dist/umd/full.js`            |
+| 使用打包工具     | Tree Shaking | `@willh/opencc-js/core` + `@willh/opencc-js/preset` |
 
 ## API 參考
 
@@ -565,7 +571,7 @@ declare module '@willh/opencc-js' {
     from?: string;
     to?: string;
   }
-  
+
   export function Converter(options?: ConverterOptions): (text: string) => string;
   export function CustomConverter(dict: [string, string][] | string): (text: string) => string;
   export function ConverterFactory(from: any, to: any, custom?: any): (text: string) => string;
@@ -573,7 +579,7 @@ declare module '@willh/opencc-js' {
     convert(): void;
     restore(): void;
   };
-  
+
   export const Locale: {
     from: Record<string, any>;
     to: Record<string, any>;

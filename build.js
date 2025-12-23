@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { variants2standard, standard2variants, presets } from './src/data-config.js';
 import { fileURLToPath } from 'url';
+import TWPhrasesCustom from './src/custom/TWPhrasesCustom.js';
 
 function getAbsPath(relativePath) {
   return fileURLToPath(new URL(relativePath, import.meta.url));
@@ -8,25 +9,37 @@ function getAbsPath(relativePath) {
 
 const fileContentCache = {};
 
+const customDicts = {
+  TWPhrasesCustom,
+  TWPhrasesCustomRev: TWPhrasesCustom.map(([from, to]) => [to, from]),
+};
+
 function loadFile(fileName) {
   if (!fileContentCache[fileName]) {
-    fileContentCache[fileName] = fs
-      .readFileSync(`node_modules/opencc-data/data/${fileName}.txt`, {
-        encoding: 'utf-8'
-      })
-      .trimEnd()
-      .split('\n')
-      .map((line) => {
-        const [k, vs] = line.split('\t');
-        const v = vs.split(' ')[0]; // only select the first candidate, the subsequent candidates are ignored
-        return [k, v];
-      })
-      .filter(([k, v]) => k !== v || k.length > 1) // remove “char => the same char” convertions to reduce file size
-      .map(([k, v]) => k + ' ' + v)
-      .join('|');
-    const outputFile = getAbsPath(`./dist/esm-lib/dict/${fileName}.js`);
-    const outputCode = `export default "${fileContentCache[fileName]}";\n`;
-    fs.writeFileSync(outputFile, outputCode);
+    if (customDicts[fileName]) {
+      fileContentCache[fileName] = customDicts[fileName];
+      const outputFile = getAbsPath(`./dist/esm-lib/dict/${fileName}.js`);
+      const outputCode = `export default ${JSON.stringify(fileContentCache[fileName], null, 2)};\n`;
+      fs.writeFileSync(outputFile, outputCode);
+    } else {
+      fileContentCache[fileName] = fs
+        .readFileSync(`node_modules/opencc-data/data/${fileName}.txt`, {
+          encoding: 'utf-8'
+        })
+        .trimEnd()
+        .split('\n')
+        .map((line) => {
+          const [k, vs] = line.split('\t');
+          const v = vs.split(' ')[0]; // only select the first candidate, the subsequent candidates are ignored
+          return [k, v];
+        })
+        .filter(([k, v]) => k !== v || k.length > 1) // remove “char => the same char” convertions to reduce file size
+        .map(([k, v]) => k + ' ' + v)
+        .join('|');
+      const outputFile = getAbsPath(`./dist/esm-lib/dict/${fileName}.js`);
+      const outputCode = `export default "${fileContentCache[fileName]}";\n`;
+      fs.writeFileSync(outputFile, outputCode);
+    }
   }
   return fileContentCache[fileName];
 }
