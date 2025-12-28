@@ -12,7 +12,7 @@ jobs:
   publish-npm:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write # Required for creating GitHub releases
       id-token: write # Required for npm provenance and trusted publishing
 
     steps:
@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: '20.17.x'
           cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Upgrade npm to latest
         run: npm install -g npm@latest
@@ -61,3 +62,13 @@ jobs:
       - name: Publish to npm
         if: steps.check.outputs.publish == 'true'
         run: npm publish --provenance --access public
+
+      - name: Create GitHub Release
+        if: steps.check.outputs.publish == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          gh release create "v$PACKAGE_VERSION" \
+            --title "v$PACKAGE_VERSION" \
+            --generate-notes
