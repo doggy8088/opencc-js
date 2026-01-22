@@ -4,6 +4,9 @@
   "description": "The JavaScript version of Open Chinese Convert (OpenCC)",
   "main": "./dist/umd/full.js",
   "type": "module",
+  "bin": {
+    "opencc": "./bin/opencc.js"
+  },
   "exports": {
     ".": {
       "import": "./dist/esm/full.js",
@@ -15,7 +18,7 @@
     "./*": "./dist/esm-lib/*.js"
   },
   "scripts": {
-    "build": "bun run build.js && bun x rollup -c",
+    "build": "bun run build.js && bun x rollup -c && bun run build-cli.js",
     "pretest": "npm run build",
     "test": "vitest run --reporter=verbose --coverage",
     "test:watch": "vitest"

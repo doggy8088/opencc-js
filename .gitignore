@@ -11,3 +11,8 @@ dist
 /bundle-node.js
 
 coverage/*
+
+# CLI executables (distributed via GitHub Releases only)
+/bin/opencc
+/bin/opencc.exe
+/bin/opencc-*

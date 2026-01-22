@@ -20,32 +20,125 @@
 - ✅ **自訂詞典**：可自訂轉換詞典，靈活擴充轉換規則
 - ✅ **DOM 操作**：提供 DOM 操作 API，輕鬆轉換網頁內容
 - ✅ **TypeScript 友善**：完整的型別定義支援（計畫中）
+- ✅ **獨立 CLI 工具**：提供跨平台命令列工具（通過 GitHub Releases 分發）
 
 ## 安裝方式
 
-### 使用 npm
+### 作為 JavaScript Library
+
+#### 使用 npm
 
 ```bash
 npm install @willh/opencc-js
 ```
 
-### 使用 yarn
+#### 使用 yarn
 
 ```bash
 yarn add @willh/opencc-js
 ```
 
-### 使用 pnpm
+#### 使用 pnpm
 
 ```bash
 pnpm add @willh/opencc-js
 ```
 
-### 使用 bun
+#### 使用 bun
 
 ```bash
 bun add @willh/opencc-js
 ```
+
+### 作為命令列工具 (CLI)
+
+有兩種安裝方式，請根據需求選擇：
+
+#### 方式 1：透過 npm 安裝（需要 Node.js 環境）
+
+```bash
+npm install -g @willh/opencc-js
+```
+
+安裝後可直接使用 `opencc` 命令，但需要 Node.js 環境。
+
+#### 方式 2：下載獨立執行檔（推薦，無需 Node.js）
+
+從 [GitHub Releases](https://github.com/doggy8088/opencc-js/releases) 下載對應平台的執行檔：
+
+- **Linux**: `opencc-linux-x64`
+- **macOS**: `opencc-macos-x64`
+- **Windows**: `opencc-windows-x64.exe`
+
+下載後可直接執行，**完全不需要** Node.js 或任何依賴。
+
+**兩種方式的比較：**
+
+| 特點 | npm 安裝 | 獨立執行檔 |
+|------|---------|-----------|
+| 安裝方式 | `npm i -g` | 下載檔案 |
+| 需要 Node.js | ✅ 是 | ❌ 否 |
+| 檔案大小 | ~6 MB | ~116 MB |
+| 執行速度 | 普通 | 快速 |
+| 適用場景 | 已有 Node.js 環境 | 獨立工具使用 |
+
+#### CLI 使用方式
+
+```bash
+# 顯示幫助訊息
+opencc
+
+# 轉換並顯示到 console（預設行為）
+opencc input.txt cn tw2
+
+# 轉換並儲存到新檔案（短參數）
+opencc input.txt cn tw2 -o output.txt
+
+# 轉換並儲存到新檔案（長參數）
+opencc input.txt cn tw2 --output output.txt
+
+# 原地覆寫檔案（短參數，類似 sed -i）
+opencc input.txt cn tw2 -i
+
+# 原地覆寫檔案（長參數）
+opencc input.txt cn tw2 --in-place
+
+# 配合管道使用
+opencc input.txt cn tw2 | grep "關鍵字"
+
+# 重定向輸出
+opencc input.txt cn tw2 > output.txt
+```
+
+**參數說明：**
+
+| 參數 | 長參數 | 功能 |
+|------|--------|------|
+| (無) | - | 輸出到 console |
+| `-o FILE` | `--output FILE` | 儲存到指定檔案 |
+| `-i` | `--in-place` | 原地覆寫輸入檔案 |
+
+**使用模式：**
+
+| 模式 | 命令 | 行為 |
+|------|------|------|
+| 顯示輸出 | `opencc file.txt cn tw2` | 轉換結果輸出到 console，原檔案不變 ✅ |
+| 另存新檔 | `opencc file.txt cn tw2 -o out.txt` | 輸出到指定檔案，原檔案不變 |
+| 原地覆寫 | `opencc file.txt cn tw2 -i` | 直接覆寫原始檔案（in-place） ⚠️ |
+
+**注意事項：**
+- `-i` 和 `-o` 不能同時使用
+- `-i` (in-place) 會直接修改原檔案，請謹慎使用
+
+#### CLI 支援的語系
+
+- `cn` - 簡體中文（中國）
+- `tw` - 繁體中文（台灣）
+- `tw2` - 繁體中文（台灣，含自訂詞組）
+- `twp` - 繁體中文（台灣，含更多詞組）
+- `hk` - 繁體中文（香港）
+- `jp` - 日文新字體
+- `t` - 繁體中文
 
 ## 載入方式
 
@@ -603,6 +696,49 @@ A: 支援所有現代瀏覽器（Chrome、Firefox、Safari、Edge 等）。如�
 
 歡迎提交 Issue 或 Pull Request！
 
+## 發布說明
+
+### 發布 JavaScript Library 到 npm
+
+```bash
+# 1. 更新版本號
+npm version patch  # 或 minor / major
+
+# 2. 發布到 npm
+npm publish
+```
+
+### 發布 CLI 執行檔到 GitHub Releases
+
+CLI 執行檔透過 GitHub Actions 自動建置和發布：
+
+```bash
+# 1. 確保所有變更都已提交
+git add .
+git commit -m "Release v1.2.0"
+
+# 2. 創建並推送 tag
+git tag v1.2.0
+git push origin main
+git push origin v1.2.0
+```
+
+推送 tag 後，GitHub Actions 會自動：
+- ✅ 在 Linux、macOS、Windows 三個平台上建置 CLI
+- ✅ 創建 GitHub Release
+- ✅ 上傳三個平台的獨立執行檔：
+  - `opencc-linux-x64`
+  - `opencc-macos-x64`
+  - `opencc-windows-x64.exe`
+
+### CI/CD Workflow
+
+本專案使用 GitHub Actions 進行自動化測試和發布：
+
+- **測試** - 每次 push 或 PR 都會執行測試
+- **建置 CLI** - 當推送帶 `v*` 的 tag 時觸發
+- **發布** - 自動創建 Release 並上傳執行檔
+
 ## 相關資源
 
 - [OpenCC](https://github.com/BYVoid/OpenCC) - 原始 C++ 實作
@@ -610,6 +746,12 @@ A: 支援所有現代瀏覽器（Chrome、Firefox、Safari、Edge 等）。如�
 - [線上示範](https://opencc.byvoid.com/) - OpenCC 線上轉換工具
 
 ## 更新日誌
+
+### 1.1.1
+- ✨ 新增命令列工具 (CLI)
+- 🚀 支援跨平台獨立執行檔（無需 Node.js）
+- 📦 優化 npm package 大小（不包含大型執行檔）
+- 🤖 自動化 CI/CD 流程，一鍵發布多平台執行檔
 
 ### 1.0.5
 - 更新套件名稱為 `@willh/opencc-js`

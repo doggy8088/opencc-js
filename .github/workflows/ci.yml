@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: [main, develop]
+    tags:
+      - 'v*'
   pull_request:
     branches: [main, develop]
 
@@ -83,4 +85,141 @@ jobs:
               repo: context.repo.repo,
               body: comment
             });
+
+  build-cli:
+    name: Build CLI for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    if: startsWith(github.ref, 'refs/tags/v')
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: opencc-linux-x64
+            asset_name: opencc-linux-x64
+          - os: macos-latest
+            artifact_name: opencc-macos-x64
+            asset_name: opencc-macos-x64
+          - os: windows-latest
+            artifact_name: opencc-windows-x64.exe
+            asset_name: opencc-windows-x64.exe
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build project
+        run: bun run build.js && bun x rollup -c
+
+      - name: Build CLI
+        run: bun run build-cli.js
+
+      - name: Rename executable (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          Move-Item -Path "bin\opencc.exe" -Destination "bin\${{ matrix.artifact_name }}"
+        shell: pwsh
+
+      - name: Rename executable (Unix)
+        if: matrix.os != 'windows-latest'
+        run: |
+          mv bin/opencc bin/${{ matrix.artifact_name }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: bin/${{ matrix.artifact_name }}
+
+  release:
+    name: Create Release
+    needs: [test, build-cli]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Display structure of downloaded files
+        run: ls -R artifacts
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          body: |
+            ## 🚀 OpenCC-JS ${{ github.ref_name }}
+
+            ### 📦 CLI Binaries
+            Download the standalone CLI for your platform:
+            - **Linux**: `opencc-linux-x64`
+            - **macOS**: `opencc-macos-x64`
+            - **Windows**: `opencc-windows-x64.exe`
+
+            ### 📝 Usage
+            ```bash
+            # Print converted text to console
+            opencc input.txt cn tw2
+
+            # Convert and save to new file
+            opencc input.txt cn tw2 -o output.txt
+
+            # Overwrite file in-place
+            opencc input.txt cn tw2 -i
+            ```
+
+            ### 🌏 Supported Locales
+            - `cn` - Simplified Chinese (China)
+            - `tw` - Traditional Chinese (Taiwan)
+            - `tw2` - Traditional Chinese (Taiwan) with custom phrases
+            - `twp` - Traditional Chinese (Taiwan) with more phrases
+            - `hk` - Traditional Chinese (Hong Kong)
+            - `jp` - Japanese Shinjitai
+
+      - name: Upload Linux Binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/opencc-linux-x64/opencc-linux-x64
+          asset_name: opencc-linux-x64
+          asset_content_type: application/octet-stream
+
+      - name: Upload macOS Binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/opencc-macos-x64/opencc-macos-x64
+          asset_name: opencc-macos-x64
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows Binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: artifacts/opencc-windows-x64.exe/opencc-windows-x64.exe
+          asset_name: opencc-windows-x64.exe
+          asset_content_type: application/octet-stream
 

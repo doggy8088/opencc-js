@@ -1,5 +1,6 @@
 /.github
 /build.js
+/build-cli.js
 /buildAndTest.sh
 /rollup.config.js
 /main.js
@@ -15,3 +16,6 @@
 /bun.lock
 /package-lock.json
 /src
+/bin/opencc
+/bin/opencc.exe
+/bin/opencc-*
