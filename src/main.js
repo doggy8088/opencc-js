@@ -57,7 +57,9 @@
     if (typeof d === 'string') {
       d = d.split('|');
       for (const line of d) {
-        const [l, r] = line.split(' ');
+        const separatorIndex = line.includes('\t') ? line.indexOf('\t') : line.indexOf(' ');
+        const l = line.slice(0, separatorIndex);
+        const r = line.slice(separatorIndex + 1);
         this.addWord(l, r);
       }
     } else {

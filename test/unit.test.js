@@ -46,6 +46,13 @@ describe('Trie', () => {
     expect(trie.convert('hello123')).toBe('world123');
     expect(trie.convert('123hello')).toBe('123world');
   });
+
+  it('should load raw dictionaries with tab before space fallback', () => {
+    const trie = new OpenCC.Trie();
+    trie.loadDict('Web 平台庫\tWeb 平台函式庫|保存更改 儲存變更');
+    expect(trie.convert('Web 平台庫')).toBe('Web 平台函式庫');
+    expect(trie.convert('保存更改')).toBe('儲存變更');
+  });
 });
 
 describe('Converter - Preset Conversions', () => {
@@ -633,6 +640,11 @@ describe('常見簡繁轉換錯誤', () => {
       '数据': '資料',
       '数据库': '資料庫',
       '网络': '網路',
+      '电子邮件': '電子郵件',
+      '网络服务': '網路服務',
+      '应用程序网关': '應用程式閘道',
+      '镜像文件': '映像檔',
+      '保存更改': '儲存變更',
       '信息': '資訊',
       '质量': '品質',
       '用户': '使用者',
@@ -648,6 +660,25 @@ describe('常見簡繁轉換錯誤', () => {
       '剑指': '針對',
       '痛点': '要害',
       '硬伤': '罩門',
+    };
+
+    for (const [cn, tw] of Object.entries(cases)) {
+      expect(converter(cn)).toBe(tw);
+    }
+  });
+
+  it('should cover cn to tw2 terminology edge cases from the quality plan', () => {
+    const converter = Converter({ from: 'cn', to: 'tw2' });
+    const cases = {
+      '数据结构数据库': '資料結構資料庫',
+      '应用程序网关和网络服务': '應用程式閘道和網路服務',
+      'Docker 镜像文件': 'Docker 映像檔',
+      '电子邮件设置保存更改。': '電子郵件設定儲存變更。',
+      '“数据库”, “网络请求”': '“資料庫”, “網路請求”',
+      '应用程序网关 API': '應用程式閘道 API',
+      '爆发发布': '爆發發表',
+      '发布公告': '發表公告',
+      '发布新版本': '發表新版本',
     };
 
     for (const [cn, tw] of Object.entries(cases)) {
