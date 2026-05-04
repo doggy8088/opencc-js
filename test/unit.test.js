@@ -679,10 +679,28 @@ describe('常見簡繁轉換錯誤', () => {
       '爆发发布': '爆發發表',
       '发布公告': '發表公告',
       '发布新版本': '發表新版本',
+      '文件名和文件系统': '檔名和檔案系統',
+      '文件描述符和函数调用': '檔案描述子和函式呼叫',
+      '渲染管线和内存分配': '算繪管線和記憶體配置',
+      '网络栈和网络适配器': '網路堆疊和網路介面卡',
     };
 
     for (const [cn, tw] of Object.entries(cases)) {
       expect(converter(cn)).toBe(tw);
+    }
+  });
+
+  it('should convert tw2 technical phrases back to simplified Chinese', () => {
+    const converter = Converter({ from: 'tw2', to: 'cn' });
+    const cases = {
+      '檔名和檔案系統': '文件名和文件系统',
+      '檔案描述子和函式呼叫': '文件描述符和函数调用',
+      '算繪管線和記憶體配置': '渲染管线和内存分配',
+      '網路堆疊和網路介面卡': '网络栈和网络适配器',
+    };
+
+    for (const [tw, cn] of Object.entries(cases)) {
+      expect(converter(tw)).toBe(cn);
     }
   });
 
