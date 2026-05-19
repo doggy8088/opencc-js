@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-HK">
+  <head>
+    <meta charset="utf-8">
+    <title>opencc-js HTMLConverter 範例</title>
+    <meta name="description" content="伺服器與網絡服務已啟動。">
+  </head>
+  <body>
+    <main id="content" lang="zh-HK">
+      <h1>漢語轉換示例</h1>
+      <p>伺服器與網絡服務已啟動。</p>
+      <p class="ignore-opencc">這段文字有 ignore-opencc，不會被轉換。</p>
+      <img src="about:blank" alt="網絡服務架構圖">
+      <button id="convert">轉換成簡體</button>
+      <button id="restore">還原</button>
+    </main>
+
+    <script type="module">
+      import * as OpenCC from "https://cdn.jsdelivr.net/npm/@willh/opencc-js/dist/esm/full.js";
+
+      const converter = OpenCC.Converter({ from: "hk", to: "cn" });
+      const htmlConverter = OpenCC.HTMLConverter(
+        converter,
+        document.getElementById("content"),
+        "zh-HK",
+        "zh-CN",
+      );
+
+      document.getElementById("convert").addEventListener("click", () => htmlConverter.convert());
+      document.getElementById("restore").addEventListener("click", () => htmlConverter.restore());
+    </script>
+  </body>
+</html>

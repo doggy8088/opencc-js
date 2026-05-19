@@ -10,6 +10,10 @@
 
 `@willh/opencc-js` 是一個純 JavaScript 實作的中文簡繁轉換工具，基於 [OpenCC](https://github.com/BYVoid/OpenCC) 專案。本套件提供完整的中文字詞轉換功能，支援多種地區性變體（中國大陸、臺灣、香港、日本新字體等），可在瀏覽器和 Node.js 環境中使用。
 
+## 範例
+
+請參考 [`examples/`](examples/)，內含 Node.js 基本轉換、不套用詞彙轉換、不同簡繁詞庫差異、自訂詞典與瀏覽器 HTML 轉換範例。
+
 ### 主要特色
 
 - ✅ **零依賴**：純 JavaScript 實作，不需要額外的系統依賴
