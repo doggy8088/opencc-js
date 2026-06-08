@@ -764,4 +764,33 @@ describe('常見簡繁轉換錯誤', () => {
       expect(converter(cn)).toBe(tw);
     }
   });
+
+  it('should use 平台 (not 平臺) consistently in tw2', () => {
+    const cnToTw2 = Converter({ from: 'cn', to: 'tw2' });
+    const cnCases = {
+      // bare \u5e73\u53f0 (simplified) \u2192 \u5e73\u53f0 (tw2), never \u5e73\u81fa
+      '\u5e73\u53f0': '\u5e73\u53f0',
+      // common platform compounds
+      '\u8de8\u5e73\u53f0': '\u8de8\u5e73\u53f0',
+      '\u8f6f\u4ef6\u5e73\u53f0': '\u8edf\u9ad4\u5e73\u53f0',
+      '\u4f5c\u4e1a\u5e73\u53f0': '\u4f5c\u696d\u5e73\u53f0',
+      // library compounds still expand \u5eab \u2192 \u51fd\u5f0f\u5eab
+      'Web \u5e73\u53f0\u5eab': 'Web \u5e73\u53f0\u51fd\u5f0f\u5eab',
+      '\u5168\u5e73\u53f0\u5eab\u5217\u8868': '\u5168\u5e73\u53f0\u51fd\u5f0f\u5eab\u5217\u8868',
+      '\u539f\u751f\u5e73\u53f0\u5eab': '\u539f\u751f\u5e73\u53f0\u51fd\u5f0f\u5eab',
+    };
+    for (const [cn, tw] of Object.entries(cnCases)) {
+      expect(cnToTw2(cn)).toBe(tw);
+    }
+
+    // tw2 \u2192 cn reverse: \u5e73\u53f0 maps back to \u5e73\u53f0
+    const tw2ToCn = Converter({ from: 'tw2', to: 'cn' });
+    const revCases = {
+      '\u8de8\u5e73\u53f0': '\u8de8\u5e73\u53f0',
+      '\u8edf\u9ad4\u5e73\u53f0': '\u8f6f\u4ef6\u5e73\u53f0',
+    };
+    for (const [tw, cn] of Object.entries(revCases)) {
+      expect(tw2ToCn(tw)).toBe(cn);
+    }
+  });
 });

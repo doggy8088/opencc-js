@@ -423,6 +423,7 @@ const TWPhrasesCustom = [
     ['單反相機', '單眼相機'],
     ['剃鬚刀', '刮鬍刀'],
     ['屏幕', '螢幕'],
+    ['平臺', '平台'],
 ];
 
 export default TWPhrasesCustom;
