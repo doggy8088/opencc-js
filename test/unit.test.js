@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import * as OpenCC from '../dist/esm-lib/core.js';
 import * as loc from '../dist/esm-lib/preset/full.js';
+import TW2TaiProperNouns from '../src/custom/TW2TaiProperNouns.js';
 
 const Converter = OpenCC.ConverterBuilder(loc);
 
@@ -203,10 +204,10 @@ describe('常見簡繁轉換錯誤', () => {
   });
 
   it('should handle "常見台灣詞彙" character correctly', () => {
-    // 使用內建 tw2 詞庫（TWVariants + TWPhrasesCustom）
+    // 使用內建 tw2 詞庫（TWVariants + TWPhrasesCustom + TW2Tai）
     const converter = Converter({ from: 'cn', to: 'tw2' });
 
-    expect(loc.to.tw2).toHaveLength(2);
+    expect(loc.to.tw2).toHaveLength(3);
     expect(loc.to.tw2[0]).toBe(loc.to.tw[0]);
     expect(Array.isArray(loc.to.tw2[1])).toBe(true);
 
@@ -791,6 +792,64 @@ describe('常見簡繁轉換錯誤', () => {
     };
     for (const [tw, cn] of Object.entries(revCases)) {
       expect(tw2ToCn(tw)).toBe(cn);
+    }
+  });
+
+  it('should use 台 for everyday words and keep 臺 in official names in tw2', () => {
+    const cnToTw2 = Converter({ from: 'cn', to: 'tw2' });
+    const cnCases = {
+      // 日常用語用「台」
+      '台北': '台北',
+      '台湾': '台灣',
+      '台中': '台中',
+      '台阶': '台階',
+      '电视台': '電視台',
+      '舞台': '舞台',
+      '后台': '後台',
+      '台积电': '台積電',
+      // 「颱」「檯」不受影響
+      '台风': '颱風',
+      '柜台': '櫃檯',
+      '吧台': '吧檯',
+      '台灯': '檯燈',
+      // 正式名稱保留「臺」
+      '国立台湾大学': '國立臺灣大學',
+      '台北市政府': '臺北市政府',
+      '新台币': '新臺幣',
+      '台湾银行': '臺灣銀行',
+      '台湾台北地方法院': '臺灣臺北地方法院',
+      '我在台北市政府上班': '我在臺北市政府上班',
+    };
+    for (const [cn, tw2] of Object.entries(cnCases)) {
+      expect(cnToTw2(cn)).toBe(tw2);
+    }
+
+    const twToTw2 = Converter({ from: 'tw', to: 'tw2' });
+    expect(twToTw2('臺北')).toBe('台北');
+    expect(twToTw2('國立臺灣大學')).toBe('國立臺灣大學');
+
+    // 輸入寫成「台」的正式名稱也會統一成「臺」
+    const tw2ToTw2 = Converter({ from: 'tw2', to: 'tw2' });
+    expect(tw2ToTw2('台北市政府')).toBe('臺北市政府');
+    expect(tw2ToTw2('新台幣')).toBe('新臺幣');
+    expect(tw2ToTw2('台灣臺北地方法院')).toBe('臺灣臺北地方法院');
+
+    const tw2ToCn = Converter({ from: 'tw2', to: 'cn' });
+    expect(tw2ToCn('國立臺灣大學')).toBe('国立台湾大学');
+    expect(tw2ToCn('台北')).toBe('台北');
+  });
+
+  it('should keep every TW2Tai proper noun intact in context', () => {
+    const converters = {
+      'cn→tw2': [Converter({ from: 'cn', to: 'tw2' }), Converter({ from: 'tw2', to: 'cn' })],
+      'tw→tw2': [Converter({ from: 'tw', to: 'tw2' }), null],
+      'tw2→tw2': [Converter({ from: 'tw2', to: 'tw2' }), null],
+    };
+    for (const noun of TW2TaiProperNouns) {
+      for (const [name, [convert, toSource]] of Object.entries(converters)) {
+        const input = toSource ? toSource(`在${noun}前`) : `在${noun}前`;
+        expect(convert(input), `${name}: ${noun}`).toBe(`在${noun}前`);
+      }
     }
   });
 });

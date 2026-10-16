@@ -2,7 +2,7 @@ export const variants2standard = {
   cn: ['STCharacters', 'STPhrases'],
   hk: ['HKVariantsRev', 'HKVariantsRevPhrases'],
   tw: ['TWVariantsRev', 'TWVariantsRevPhrases'],
-  tw2: ['TWVariantsRev', 'TWPhrasesCustomRev'],
+  tw2: ['TWVariantsRev', 'TWPhrasesCustomRev', 'TW2TaiRev'],
   twp: ['TWVariantsRev', 'TWVariantsRevPhrases', 'TWPhrasesRev'],
   jp: ['JPVariantsRev', 'JPShinjitaiCharacters', 'JPShinjitaiPhrases'],
 };
@@ -11,7 +11,7 @@ export const standard2variants = {
   cn: ['TSCharacters', 'TSPhrases'],
   hk: ['HKVariants'],
   tw: ['TWVariants'],
-  tw2: ['TWVariants', 'TWPhrasesCustom'],
+  tw2: ['TWVariants', 'TWPhrasesCustom', 'TW2Tai'],
   twp: ['TWVariants', 'TWPhrasesIT', 'TWPhrasesName', 'TWPhrasesOther'],
   jp: ['JPVariants'],
 };

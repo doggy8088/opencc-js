@@ -2,6 +2,7 @@ import fs from 'fs';
 import { variants2standard, standard2variants, presets } from './src/data-config.js';
 import { fileURLToPath } from 'url';
 import TWPhrasesCustom from './src/custom/TWPhrasesCustom.js';
+import { buildTw2Tai } from './tools/gen-tw2-tai.mjs';
 
 function getAbsPath(relativePath) {
   return fileURLToPath(new URL(relativePath, import.meta.url));
@@ -9,9 +10,14 @@ function getAbsPath(relativePath) {
 
 const fileContentCache = {};
 
+const tw2Tai = buildTw2Tai();
+
 const customDicts = {
   TWPhrasesCustom,
   TWPhrasesCustomRev: TWPhrasesCustom.map(([from, to]) => [to, from]),
+  // 正向與反向分開產生，不能用對調（見 tools/gen-tw2-tai.mjs）
+  TW2Tai: tw2Tai.forward,
+  TW2TaiRev: tw2Tai.reverse,
 };
 
 function loadFile(fileName) {
