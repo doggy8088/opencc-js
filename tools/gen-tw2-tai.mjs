@@ -82,7 +82,7 @@ function extractBlob(source, names) {
 
 // 各 port 字典原始碼的常數格式；close 是常數之後的關閉符號（null 表示檔尾）
 const SOURCE_FORMATS = {
-  '.cs': { names: ['TW2Tai', 'TW2TaiRev'], close: '}', blob: (n, l) => `        public const string ${n} = """\n${l}\n""";\n` },
+  '.cs': { names: ['TW2Tai', 'TW2TaiRev'], close: '}', blob: (n, l) => `    public const string ${n} = """\n${l}\n""";\n` },
   '.rs': { names: ['TW2_TAI', 'TW2_TAI_REV'], close: null, blob: (n, l) => `pub const ${n}: &str = "\\\n${l}\n";\n` },
   '.swift': { names: ['TW2Tai', 'TW2TaiRev'], close: '}', blob: (n, l) => `    static let ${n} = """\n${l}\n"""\n` },
 };
