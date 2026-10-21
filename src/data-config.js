@@ -11,8 +11,8 @@ export const standard2variants = {
   cn: ['TSCharacters', 'TSPhrases'],
   hk: ['HKVariants'],
   tw: ['TWVariants'],
-  tw2: ['TWVariants', 'TWPhrasesCustom', 'TW2Tai'],
-  twp: ['TWVariants', 'TWPhrasesIT', 'TWPhrasesName', 'TWPhrasesOther'],
+  tw2: ['TWVariants', 'TWPhrasesCustom', 'TW2Tai', 'TaiwanQualityTW2'],
+  twp: ['TWVariants', 'TWPhrasesIT', 'TWPhrasesName', 'TWPhrasesOther', 'TaiwanQualityTWP'],
   jp: ['JPVariants'],
 };
 
