@@ -1,5 +1,5 @@
 export const variants2standard = {
-  cn: ['STCharacters', 'STPhrases'],
+  cn: ['STCharacters', 'STPhrases', 'TaiwanQualityCN'],
   hk: ['HKVariantsRev', 'HKVariantsRevPhrases'],
   tw: ['TWVariantsRev', 'TWVariantsRevPhrases'],
   tw2: ['TWVariantsRev', 'TWPhrasesCustomRev', 'TW2TaiRev'],

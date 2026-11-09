@@ -2,7 +2,7 @@ import fs from 'fs';
 import { variants2standard, standard2variants, presets } from './src/data-config.js';
 import { fileURLToPath } from 'url';
 import TWPhrasesCustom from './src/custom/TWPhrasesCustom.js';
-import { tw2, twp } from './src/custom/TaiwanQuality.js';
+import { cn, tw2, twp } from './src/custom/TaiwanQuality.js';
 import { buildTw2Tai } from './tools/gen-tw2-tai.mjs';
 
 function getAbsPath(relativePath) {
@@ -14,6 +14,7 @@ const fileContentCache = {};
 const tw2Tai = buildTw2Tai();
 
 const customDicts = {
+  TaiwanQualityCN: cn,
   TaiwanQualityTW2: tw2,
   TaiwanQualityTWP: twp,
   TWPhrasesCustom,
