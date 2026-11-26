@@ -1,0 +1,6 @@
+#!/bin/sh
+# 本機 pre-commit hook（啟用方式見 repo 文件的「本機與 CI 驗證分工」）。
+# 完整 vitest 套件較久，hook 只跑 build（字典產生錯誤最常見的翻車點）；完整測試交給 CI。
+set -e
+echo "[pre-commit] bun run build"
+bun run build
