@@ -2,11 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches-ignore:
+      - gh-pages
     tags:
       - 'v*'
   pull_request:
-    branches: [main, develop]
+    branches-ignore:
+      - gh-pages
 
 jobs:
   test:
@@ -76,7 +78,7 @@ jobs:
             | Functions | ${(totals.functions.pct || 0).toFixed(1)}% |
             | Branches | ${(totals.branches.pct || 0).toFixed(1)}% |
 
-            📊 [Full Coverage Report](https://codecov.io) | 🧪 24 tests passed
+            📊 [Full Coverage Report](https://codecov.io)
             `;
 
             github.rest.issues.createComment({
